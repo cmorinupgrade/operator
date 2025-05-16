@@ -264,3 +264,37 @@ func Test_ValidateTektonPipeline_OnDelete(t *testing.T) {
 		t.Errorf("ValidateTektonPipeline.Validate() on Delete expected no error, but got one, ValidateTektonPipeline: %v", err)
 	}
 }
+
+func TestValidateTektonPipeline_DefaultImagePullBackoffTimeout(t *testing.T) {
+	tp := &TektonPipeline{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "pipeline",
+			Namespace: "tekton-pipelines-ns",
+		},
+		Spec: TektonPipelineSpec{
+			CommonSpec: CommonSpec{
+				TargetNamespace: "tekton-pipelines-ns",
+			},
+		},
+	}
+
+	tests := []struct {
+		name     string
+		timeout  string
+		expected string
+	}{
+		{name: "empty-value", timeout: "", expected: ""},
+		{name: "valid-duration-seconds", timeout: "10s", expected: ""},
+		{name: "valid-duration-minutes", timeout: "5m", expected: ""},
+		{name: "valid-duration-complex", timeout: "1h30m", expected: ""},
+		{name: "invalid-duration", timeout: "invalid", expected: "invalid value: invalid: spec.default-imagepullbackoff-timeout"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			tp.Spec.Pipeline.DefaultImagePullBackoffTimeout = test.timeout
+			errs := tp.Validate(context.TODO())
+			assert.Equal(t, test.expected, errs.Error())
+		})
+	}
+}

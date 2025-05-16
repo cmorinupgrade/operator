@@ -559,6 +559,27 @@ func TestAddConfigMapValues_OptionalPipelineProperties(t *testing.T) {
 	assert.Equal(t, cm.Data["default-pod-template"], "")
 }
 
+func TestAddConfigMapValues_DefaultImagePullBackoffTimeout(t *testing.T) {
+	testData := path.Join("testdata", "test-replace-cm-values.yaml")
+	manifest, err := mf.ManifestFrom(mf.Recursive(testData))
+	assertNoError(t, err)
+
+	// Test with a valid value
+	prop := v1alpha1.OptionalPipelineProperties{
+		DefaultImagePullBackoffTimeout: "5m",
+	}
+
+	manifest, err = manifest.Transform(AddConfigMapValues("test2", prop))
+	assertNoError(t, err)
+
+	cm := &corev1.ConfigMap{}
+	err = runtime.DefaultUnstructuredConverter.FromUnstructured(manifest.Resources()[1].Object, cm)
+	assertNoError(t, err)
+	
+	// Verify the value is correctly added to the ConfigMap
+	assert.Equal(t, cm.Data["default-imagepullbackoff-timeout"], "5m")
+}
+
 func TestAddConfigMapValues(t *testing.T) {
 	configMapName := "test-add-config"
 	configMapNameWithData := "test-add-config-with-data"

@@ -147,6 +147,7 @@ type OptionalPipelineProperties struct {
 	DefaultMaxMatrixCombinationsCount   string `json:"default-max-matrix-combinations-count,omitempty"`
 	DefaultForbiddenEnv                 string `json:"default-forbidden-env,omitempty"`
 	DefaultResolverType                 string `json:"default-resolver-type,omitempty"`
+	DefaultImagePullBackoffTimeout      string `json:"default-imagepullbackoff-timeout,omitempty"`
 }
 
 // WebhookOptions defines options for webhooks

@@ -20,6 +20,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"github.com/tektoncd/pipeline/pkg/apis/config"
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -79,6 +80,13 @@ func (p *PipelineProperties) validate(path string) (errs *apis.FieldError) {
 	if p.MaxResultSize != nil {
 		if *p.MaxResultSize >= 1572864 {
 			errs = errs.Also(apis.ErrInvalidValue(p.MaxResultSize, path+".max-result-size"))
+		}
+	}
+
+	// validate default-imagepullbackoff-timeout duration format
+	if p.DefaultImagePullBackoffTimeout != "" {
+		if _, err := time.ParseDuration(p.DefaultImagePullBackoffTimeout); err != nil {
+			errs = errs.Also(apis.ErrInvalidValue(p.DefaultImagePullBackoffTimeout, fmt.Sprintf("%s.default-imagepullbackoff-timeout", path)))
 		}
 	}
 
