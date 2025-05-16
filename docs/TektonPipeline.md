@@ -49,6 +49,7 @@ spec:
   send-cloudevents-for-runs: false
   set-security-context: false
   trusted-resources-verification-no-match-policy: ignore
+  default-imagepullbackoff-timeout: "5m"
   performance:
     disable-ha: false
     buckets: 1
@@ -250,6 +251,10 @@ Task declares but that a TaskRun does not explicitly provide.
 - `default-resolver-type`
 
   default-resolver-type contains the resolver type to be used as default resolver.
+
+- `default-imagepullbackoff-timeout`
+
+  default-imagepullbackoff-timeout specifies the timeout duration to use for TaskRun when encountering ImagePullBackOff errors. The value should be a valid Go duration string (e.g. "5m" for 5 minutes, "1h30m" for 1 hour and 30 minutes).
 
 [Pipeline]:https://github.com/tektoncd/pipeline
 

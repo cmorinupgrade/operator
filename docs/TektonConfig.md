@@ -76,6 +76,7 @@ The TektonConfig CR provides the following features
       send-cloudevents-for-runs: false
       set-security-context: false
       trusted-resources-verification-no-match-policy: ignore
+      default-imagepullbackoff-timeout: "5m"
       performance:
         disable-ha: false
         buckets: 1
